@@ -63,3 +63,5 @@ def apply_job(db:Session,user_id:int,job_id:int):
 
     return application
 
+def get_user_by_id(db:Session,user_id:int):
+    return db.query(models.User).filter(models.User.id==user_id).first()
