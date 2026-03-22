@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
+from datetime import datetime
 
 
 # ----------------------
@@ -14,11 +15,10 @@ class UserCreate(UserBase):
     password: str
 
 
-class UserResponse(BaseModel):
+class UserResponse(UserBase):
     id: int
-    name: str
-    email: str
     role: str
+    created_at: datetime
 
     class Config:
         from_attributes = True
@@ -36,6 +36,7 @@ class CompanyResponse(BaseModel):
     id: int
     name: str
     description: Optional[str]
+    created_at: datetime
 
     class Config:
         from_attributes = True
@@ -55,6 +56,8 @@ class JobResponse(BaseModel):
     title: str
     description: str
     location: str
+    company_id: int
+    created_at: datetime
 
     class Config:
         from_attributes = True
@@ -71,7 +74,28 @@ class ApplicationResponse(BaseModel):
     id: int
     user_id: int
     job_id: int
-    status: str   # fixed
+    status: str
+    created_at: datetime
 
     class Config:
         from_attributes = True
+
+
+# ----------------------
+# PAGINATION (🔥 IMPORTANT)
+# ----------------------
+class PaginationMeta(BaseModel):
+    total: int
+    page: int
+    limit: int
+    total_pages: int
+
+
+class PaginatedJobResponse(BaseModel):
+    meta: PaginationMeta
+    data: List[JobResponse]
+
+
+class PaginatedApplicationResponse(BaseModel):
+    meta: PaginationMeta
+    data: List[ApplicationResponse]
